@@ -4,7 +4,7 @@ import bluebird from 'bluebird';
 import dotenv from 'dotenv';
 import config from './config';
 import serviceLocator from '../lib/service_location';
-// import GatewayController from '../controllers/gateway';
+import EmployeeController from '../controllers';
 import EmployeeService from '../services/employeeService';
 
 const winston = require('winston');
@@ -71,13 +71,13 @@ serviceLocator.register('EmployeeService', (servicelocator) => {
 /**
  * Creates an instance of the gateway Controller
  */
-// serviceLocator.register('GatewayController', (servicelocator) => {
-//   const logger = servicelocator.get('logger');
-//   const GatewayService = servicelocator.get('GatewayService');
-//   return new GatewayController(
-//     logger, GatewayService
-//   );
-// });
+serviceLocator.register('EmployeeController', (servicelocator) => {
+  const logger = servicelocator.get('logger');
+  const EmployeeService = servicelocator.get('EmployeeService');
+  return new EmployeeController(
+    logger, EmployeeService
+  );
+});
 
 const serviceLocate = serviceLocator;
 
