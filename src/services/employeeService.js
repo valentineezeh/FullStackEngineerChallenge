@@ -62,9 +62,97 @@ class EmployeeService {
      */
   async getAllEmployees() {
     try {
-      return await EmployeeModel.find();
+      return await EmployeeModel.find().populate();
     } catch (error) {
       this.logger.error('error getting all employees');
+    }
+  }
+
+  /**
+     * @description create a new employee
+     * @param {Object} payload - Http Request object
+     * @returns {Object} returns a payload of created employee
+     */
+  async updateEmployeeDetails(payload) {
+    try {
+      const response = await EmployeeModel.findByIdAndUpdate({ _id: payload.employeeId }, payload, { new: true });
+      return response;
+    } catch (error) {
+      this.logger.error('error getting all employees');
+    }
+  }
+
+  /**
+     * @description delete a employee
+     * @param {Object} id - Http Request object
+     * @returns {Object} returns a payload of deleted employee
+     */
+  async deleteEmployeeDetails(id) {
+    try {
+      const response = await EmployeeModel.findByIdAndDelete({ _id: id });
+      return response;
+    } catch (error) {
+      this.logger.error('error deleting this employee');
+    }
+  }
+
+  /**
+     * @description delete a employee
+     * @param {Object} id - Http Request object
+     * @returns {Object} returns a payload of deleted employee
+     */
+  async getEmployeeReview(id) {
+    try {
+      const response = await ReviewModel.find({ employeeId: id });
+      return response;
+    } catch (error) {
+      this.logger.error('error deleting this employee');
+    }
+  }
+
+  /**
+     * @description delete all reviews allocated to an employee
+     * @param {Object} id - Http Request object
+     * @returns {Object} returns a payload of deleted reviews
+     */
+  async deleteEmployeeReview(id) {
+    try {
+      const response = await ReviewModel.deleteMany({
+        employeeId: id
+      });
+      return response;
+    } catch (error) {
+      this.logger.error('error deleting employee reviews');
+    }
+  }
+
+  /**
+     * @description delete all reviews
+     * @param {Object} id - Http Request object
+     * @returns {Object} returns a payload of deleted reviews
+     */
+  async deleteReview(id) {
+    try {
+      const response = await ReviewModel.deleteOne({
+        _id: id
+      });
+      return response;
+    } catch (error) {
+      this.logger.error('error deleting reviews');
+    }
+  }
+
+  /**
+     * @description give employee privilege
+     * @param {Object} id - Http Request object
+     * @returns {Object} returns a payload of employee
+     */
+  async givePrivilege(id) {
+    try {
+      const response = await EmployeeModel.findByIdAndUpdate({ _id: id }, { privilege: true }, { new: true });
+      return response;
+    } catch (error) {
+      this.logger.error('error giving employee privilege.');
     }
   }
 }
