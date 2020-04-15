@@ -6,6 +6,7 @@ const respond = (res, data, httpCode) => {
     code: httpCode,
     data: data.response,
     message: data.message,
+    token: data.token,
     validationError: data.validationError
   };
   res.setHeader('Content-Type', 'application/json');

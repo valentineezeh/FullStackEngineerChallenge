@@ -1,5 +1,6 @@
 import EmployeeModel from '../model/employee';
 import ReviewModel from '../model/reviews';
+import UserModel from '../model/user';
 
 /**
  * @description Employee service
@@ -13,6 +14,34 @@ class EmployeeService {
      */
   constructor(logger) {
     this.logger = logger;
+  }
+
+  /**
+     * @description create a new employee
+     * @param {Object} searchQuery - Http Request object
+     * @returns {Object} returns a payload of created employee
+     */
+  async findAdmin(searchQuery) {
+    try {
+      const response = await UserModel.findOne(searchQuery);
+      return response;
+    } catch (error) {
+      this.logger.error('error login in admin');
+    }
+  }
+
+  /**
+     * @description create a new employee
+     * @param {Object} searchQuery - Http Request object
+     * @returns {Object} returns a payload of created employee
+     */
+  async createAdmin() {
+    try {
+      const response = await new UserModel();
+      return response;
+    } catch (error) {
+      this.logger.error('error creating admin');
+    }
   }
 
 
@@ -31,12 +60,21 @@ class EmployeeService {
 
   /**
      * @description create a new employee
+     * @param {Object} searchQuery - Http Request object
      * @param {Object} payload - Http Request object
      * @returns {Object} returns a payload of created employee
      */
-  async createEmployeeReview(payload) {
+  async createEmployeeReview(searchQuery, payload) {
     try {
-      return await ReviewModel.create(payload);
+      const response = await EmployeeModel.findOneAndUpdate(
+        searchQuery, {
+          $push: {
+            reviews: [payload]
+          }
+        },
+        { new: true }
+      );
+      return response;
     } catch (error) {
       this.logger.error('error creating employee review');
     }
@@ -62,7 +100,9 @@ class EmployeeService {
      */
   async getAllEmployees() {
     try {
-      return await EmployeeModel.find().populate();
+      return await EmployeeModel.find().sort({
+        updatedAt: -1
+      });
     } catch (error) {
       this.logger.error('error getting all employees');
     }
@@ -97,48 +137,25 @@ class EmployeeService {
   }
 
   /**
-     * @description delete a employee
-     * @param {Object} id - Http Request object
-     * @returns {Object} returns a payload of deleted employee
-     */
-  async getEmployeeReview(id) {
-    try {
-      const response = await ReviewModel.find({ employeeId: id });
-      return response;
-    } catch (error) {
-      this.logger.error('error deleting this employee');
-    }
-  }
-
-  /**
      * @description delete all reviews allocated to an employee
-     * @param {Object} id - Http Request object
+     * @param {Object} searchQuery - Http Request object
+     * @param {Object} reviewId - Http Request object
      * @returns {Object} returns a payload of deleted reviews
      */
-  async deleteEmployeeReview(id) {
+  async deleteEmployeeReview(searchQuery, reviewId) {
     try {
-      const response = await ReviewModel.deleteMany({
-        employeeId: id
-      });
+      const response = await EmployeeModel.findByIdAndUpdate(
+        searchQuery,
+        {
+          $pull: {
+            reviews: { _id: reviewId }
+          }
+        },
+        { new: true }
+      );
       return response;
     } catch (error) {
       this.logger.error('error deleting employee reviews');
-    }
-  }
-
-  /**
-     * @description delete all reviews
-     * @param {Object} id - Http Request object
-     * @returns {Object} returns a payload of deleted reviews
-     */
-  async deleteReview(id) {
-    try {
-      const response = await ReviewModel.deleteOne({
-        _id: id
-      });
-      return response;
-    } catch (error) {
-      this.logger.error('error deleting reviews');
     }
   }
 
@@ -153,6 +170,43 @@ class EmployeeService {
       return response;
     } catch (error) {
       this.logger.error('error giving employee privilege.');
+    }
+  }
+
+  /**
+     * @description give a review feedback
+     * @param {Object} searchQuery - Http Request object
+     * @param {Object} payload - Http Request object
+     * @returns {Object} returns response
+     */
+  async giveFeedBack(searchQuery, payload) {
+    try {
+      const response = await EmployeeModel.updateOne(
+        { 'reviews._id': { $eq: searchQuery.reviewId } },
+        {
+          $push: {
+            'reviews.$.feedback': [payload]
+          }
+        },
+        { new: true }
+      );
+      return response;
+    } catch (error) {
+      this.logger.error('error giving review feedback');
+    }
+  }
+
+  /**
+     * @description give a review feedback
+     * @param {Object} employeeId - Http Request object
+     * @returns {Object} returns response
+     */
+  async getReviews(employeeId) {
+    try {
+      const response = await EmployeeModel.find({ 'reviews.employeeId': employeeId }, 'reviews');
+      return response;
+    } catch (error) {
+      this.logger.error('error getting reviews');
     }
   }
 }

@@ -22,24 +22,41 @@ router.get(
   (req, res) => EmployeeController.getAllEmployees(req, res)
 );
 
-router.get(
-  '/employee-reviews/:employeeId',
-  (req, res) => EmployeeController.getEmployeeReview(req, res)
-);
-
 router.delete(
   '/employee/:employeeId',
   (req, res) => EmployeeController.deleteEmployeeDetails(req, res)
 );
 
 router.delete(
-  '/review/:reviewId',
+  '/review/:employeeId',
   (req, res) => EmployeeController.deleteReview(req, res)
 );
 
 router.patch(
   '/employee-review-privilege/:employeeId',
   (req, res) => EmployeeController.givePrivilege(req, res)
+);
+
+router.post(
+  '/login-admin',
+  (req, res, next) => verifyUserInput.validateAuthInput(req, res, next),
+  (req, res) => EmployeeController.loginAdmin(req, res)
+);
+
+router.post(
+  '/create-admin',
+  (req, res, next) => verifyUserInput.validateAuthInput(req, res, next),
+  (req, res) => EmployeeController.registerAdmin(req, res)
+);
+
+router.post(
+  '/post-feedback/:employeeId',
+  (req, res) => EmployeeController.addFeedback(req, res)
+);
+
+router.get(
+  '/get-reviews/:employeeId',
+  (req, res) => EmployeeController.getAllReviews(req, res)
 );
 
 export default router;

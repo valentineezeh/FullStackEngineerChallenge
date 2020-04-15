@@ -11,6 +11,13 @@ Object.defineProperty(HTTPStatus, 'OK', {
   configurable: false,
 });
 
+Object.defineProperty(HTTPStatus, 'CONFLICT', {
+  value: 409,
+  writable: false,
+  enumerable: true,
+  configurable: false,
+});
+
 Object.defineProperty(HTTPStatus, 'CREATED', {
   value: 201,
   writable: false,

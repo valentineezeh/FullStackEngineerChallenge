@@ -2,7 +2,7 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-const appName = 'GATEWAY_SERVICE';
+const appName = 'EMPLOYEE_SERVICE';
 
 const config = {
   appName,
