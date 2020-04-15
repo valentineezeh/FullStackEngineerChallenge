@@ -37,3 +37,44 @@ Design a web application that allows employees to submit feedback toward each ot
 * Technology and design choices
 * Identify areas of your strengths
 * This is not a pass or fail test, this will serve as a common ground that we can deep dive together into specific issues
+
+## Technologies Used
+
+- Backend: Node/Express
+- MongoDB
+- Libaries: Es6, eslint, mocha, express, chai, babel
+
+## To Install
+
+- Download or clone
+- Open terminal inside the root directory of clone folder
+- Type `npm install` to install all dependencies
+- `npm start` to run the app in production environment
+- npm run `dev` to run development environment
+
+## Features
+
+- Create Employee by admin
+- Create Employee review by an admin
+- Get all employees
+- Get all employees review
+- Remove review by an admin
+- Create feedback by an employee
+- Login as an admin
+- Create an admin
+
+## API Endpoints
+
+| Endpoint                                             | Functionality                      |
+| ---------------------------------------------------- | ---------------------------------- |
+| POST /create-employee                                | Create Employee                    |
+| POST /create-employee-review/\<employeeId>           | Create an employee review          |
+| GET /employees                                       | Get all employees                  |
+| POST /post-feedback/\<employeeId>?reviewId=<reviewId>| Post a feedback                    |
+| POST /create-admin/                                  | Create an admin                    |
+| POST /login-admin/                                   | Login an admin                     |
+| DELETE /review/\<employeeId>?reviewId=<reviewId>     | Remove a review for a employee     |
+
+## AUTHOR
+
+[Valentine Ezeh](https://github.com/valentineezeh/gateway-service/)
